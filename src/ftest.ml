@@ -1,4 +1,5 @@
 open Gfile
+open Tools
     
 let () =
 
@@ -28,8 +29,11 @@ let () =
   (* Open file *)
   let graph = from_file infile in
 
+  (*fonctions à tester*)
+  let graph2 = gmap graph (fun x -> string_of_int(int_of_string(x)+1)) in
+
   (* Rewrite the graph that has been read. *)
-  let () = write_file outfile graph in
+  let () = write_file outfile graph2 in
 
   ()
 
