@@ -1,7 +1,10 @@
 {
-    "files.associations": {
-        "*.ml": "ocaml",
-        "*.mli": "ocaml"
-    },
-    "editor.formatOnSave": true
+  "files.associations": {
+    "*.ml": "ocaml",
+    "*.mli": "ocaml"
+  },
+  "editor.formatOnSave": true,
+  "ocaml.sandbox": {
+    "kind": "global"
+  }
 }

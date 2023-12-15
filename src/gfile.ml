@@ -111,4 +111,15 @@ let from_file path =
   
   close_in infile ;
   final_graph
-  
+
+let export infile outfile = 
+  let oc = open_out outfile in
+  let graph = from_file infile in
+  Printf.fprintf oc "digraph finite_state_machine {\n";
+  Printf.fprintf oc "   fontname=\"Helvetica,Arial,sans-serif\"\n";
+  Printf.fprintf oc "   node [fontname=\"Helvetica,Arial,sans-serif\"]\n";
+  Printf.fprintf oc "   edge [fontname=\"Helvetica,Arial,sans-serif\"]\n";
+  Printf.fprintf oc "   rankdir=LR;\n";
+  Printf.fprintf oc "   node [shape = circle];\n";
+  e_iter graph (fun x -> (Printf.fprintf oc "   %d -> %d [label = %d];\n" x.src x.tgt (int_of_string(x.lbl))));
+  Printf.fprintf oc "}\n"
