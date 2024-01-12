@@ -13,3 +13,5 @@ val augmenter: id -> id arc list -> id graph -> id graph
 val rm_nullarc: id graph -> id graph
 
 val ffalgo: id graph -> id -> id -> id graph
+
+val solution: id graph -> id -> id -> string graph

@@ -65,13 +65,17 @@ let () =
   let graph5 = gmap graph4 (fun x -> string_of_int(x)) in*)
 
   (*test ffalgo*)
-  let graph6 = ffalgo intgraph _source _sink in
-  let graph7 = gmap graph6 (fun x -> string_of_int(x)) in
+  (*let graph6 = ffalgo intgraph _source _sink in
+  let graph7 = gmap graph6 (fun x -> string_of_int(x)) in*)
+
+  (*test fsol*)
+  let graph8 = solution intgraph _source _sink in
 
   (* Rewrite the graph that has been read. *)
-  (*let () = write_file outfile graph4 in
+  (*let () = write_file outfile graph8 in
 
   ()*)
-  let () = export graph7 outfile in
+
+  let () = export graph8 outfile in
 
   ()

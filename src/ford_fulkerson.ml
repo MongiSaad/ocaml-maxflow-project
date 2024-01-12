@@ -50,16 +50,33 @@ let rec augmenter v arclist graph =
 
 let rm_nullarc gr = gfilter gr (fun arc -> arc.lbl>0)
 
-let printpath path = match path with
+let print_list_of_int path = match path with
   | [] -> Printf.printf "[]"
   | _ -> let l1 = List.map (fun x -> string_of_int(x)) path in
     Printf.printf "%s\n%!" (String.concat " " l1)
+
+
 let rec ffalgo graph source puit =
   let path = find_path graph source puit [] in
-  printpath path;
+  print_list_of_int path;
   match path with 
   | [] -> graph
-  | nodelist -> let v = augmentation nodelist in
+  | nodelist -> let arclbllist = node_to_arclbl_list nodelist graph [] in
+    print_list_of_int arclbllist;
     let arclist = node_to_arc_list nodelist graph [] in
+    let v = augmentation arclbllist in
+    Printf.printf "%d\n%!" v;
     let graph2 = augmenter v arclist graph in
-    ffalgo graph2 source puit
+    let graph3 = rm_nullarc graph2 in
+    ffalgo graph3 source puit
+
+let gsol gr1 gr2 = let gr3 = clone_nodes gr1 in
+  e_fold gr1 (fun gr4 arc -> (new_arc gr4 {src=arc.src; tgt=arc.tgt; lbl= match find_arc gr2 arc.src arc.tgt with
+    | None -> string_of_int(arc.lbl)^"/"^string_of_int(arc.lbl)
+    | Some arc2 -> if (arc.lbl-arc2.lbl>=0)
+        then string_of_int(arc.lbl-arc2.lbl)^"/"^string_of_int(arc.lbl)
+        else "0/"^string_of_int(arc.lbl)})) gr3
+
+let solution graph source puit =
+  let graph2 = ffalgo graph source puit in
+  gsol graph graph2

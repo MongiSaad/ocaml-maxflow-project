@@ -120,5 +120,5 @@ let export graph outfile =
   Printf.fprintf oc "   edge [fontname=\"Helvetica,Arial,sans-serif\"]\n";
   Printf.fprintf oc "   rankdir=LR;\n";
   Printf.fprintf oc "   node [shape = circle];\n";
-  e_iter graph (fun x -> (Printf.fprintf oc "   %d -> %d [label = %d];\n" x.src x.tgt (int_of_string(x.lbl))));
+  e_iter graph (fun x -> (Printf.fprintf oc "   %d -> %d [label = \"%s\"];\n" x.src x.tgt x.lbl));
   Printf.fprintf oc "}\n"
