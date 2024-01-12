@@ -41,7 +41,7 @@ let () =
   let () = export infile outfile in
   ()*)
 
-  (*test find_path*)
+  (*(*test find_path*)
   let chemin = find_path intgraph 0 5 [] in
   let l1 = List.map (fun x -> string_of_int(x)) chemin in
   Printf.printf "%s\n%!" (String.concat " " l1);
@@ -59,12 +59,19 @@ let () =
   let l4 = node_to_arc_list chemin intgraph [] in
   let graph2 = gmap graph (fun x -> int_of_string(x)) in
   let graph3 = augmenter m l4 graph2 in
-  let graph4 = gmap graph3 (fun x -> string_of_int(x)) in
+
+  (*test rm_nullarc*)
+  let graph4 = rm_nullarc graph3 in
+  let graph5 = gmap graph4 (fun x -> string_of_int(x)) in*)
+
+  (*test ffalgo*)
+  let graph6 = ffalgo intgraph _source _sink in
+  let graph7 = gmap graph6 (fun x -> string_of_int(x)) in
 
   (* Rewrite the graph that has been read. *)
   (*let () = write_file outfile graph4 in
 
   ()*)
-  let () = export graph4 outfile in
+  let () = export graph7 outfile in
 
   ()

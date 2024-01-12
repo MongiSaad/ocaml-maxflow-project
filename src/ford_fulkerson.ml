@@ -48,5 +48,18 @@ let rec augmenter v arclist graph =
       let graph3 = add_arc graph2 x.tgt x.src v in
       augmenter v rest graph3
 
-let rm_nullarc gr = let gr2 = clone_nodes gr in
-e_fold gr (fun gr3 arc -> if (arc.lbl>0) then (new_arc gr3 {src=arc.src; tgt=arc.tgt; lbl=arc.lbl}) else ) gr2 
+let rm_nullarc gr = gfilter gr (fun arc -> arc.lbl>0)
+
+let printpath path = match path with
+  | [] -> Printf.printf "[]"
+  | _ -> let l1 = List.map (fun x -> string_of_int(x)) path in
+    Printf.printf "%s\n%!" (String.concat " " l1)
+let rec ffalgo graph source puit =
+  let path = find_path graph source puit [] in
+  printpath path;
+  match path with 
+  | [] -> graph
+  | nodelist -> let v = augmentation nodelist in
+    let arclist = node_to_arc_list nodelist graph [] in
+    let graph2 = augmenter v arclist graph in
+    ffalgo graph2 source puit
