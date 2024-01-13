@@ -2,7 +2,7 @@
 
 src?=1
 dst?=8
-graph?=graph7.txt
+graph?=moneysharing1.txt
 
 all: build
 

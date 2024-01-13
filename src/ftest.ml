@@ -1,6 +1,7 @@
 open Gfile
-open Tools
-open Ford_fulkerson
+(*open Tools
+open Ford_fulkerson*)
+open Money_sharing
 
 let () =
 
@@ -28,8 +29,9 @@ let () =
   in
 
   (* Open file *)
-  let graph = from_file infile in
-  let intgraph = gmap graph (fun x -> int_of_string(x)) in
+  (*let graph = from_file infile in
+  let intgraph = gmap graph (fun x -> int_of_string(x)) in*)
+  let ms_graph = txt_to_node infile in
 
   (*fonctions à tester*)
   (* let graph2 = gmap graph (fun x -> string_of_int(int_of_string(x)+1)) in*)
@@ -68,14 +70,18 @@ let () =
   (*let graph6 = ffalgo intgraph _source _sink in
   let graph7 = gmap graph6 (fun x -> string_of_int(x)) in*)
 
+  (*test txt_to_amount*)
+  let a = txt_to_amount infile in
+  Printf.printf "%f\n%!" a;
+
   (*test fsol*)
-  let graph8 = solution intgraph _source _sink in
+  (*let graph8 = solution intgraph _source _sink in*)
 
   (* Rewrite the graph that has been read. *)
-  (*let () = write_file outfile graph8 in
-
-  ()*)
-
-  let () = export graph8 outfile in
+  let () = write_file outfile ms_graph in
 
   ()
+
+  (*let () = export graph8 outfile in
+
+  ()*)
