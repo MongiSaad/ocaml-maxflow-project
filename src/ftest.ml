@@ -1,6 +1,6 @@
 open Gfile
-(*open Tools
-open Ford_fulkerson*)
+open Tools
+open Ford_fulkerson
 open Money_sharing
 
 let () =
@@ -86,14 +86,28 @@ let () =
   let string_ldiff = List.map (fun x -> string_of_float(x)) ldiff in
   Printf.printf "%s\n%!" (String.concat " " string_ldiff);
 
+  (*test create_graph_complet*)
+  let listnodes = node_list_from_graph ms_graph in
+  let graph8 = create_graph_complet ms_graph listnodes in
+
+  (*test create_source_puit*)
+  let graph9 = gmap graph8 (fun x -> float_of_string(x)) in
+  let graph10 = create_source_puit graph9 listnodes ldiff in
+  (*let graph14 = gmap graph10 (fun x -> int_of_float(x)) in*)
+  
+  (*test ffalgo sur le nouveau pb*)
+  let graph13 = solutionfloat graph10 3 4 in
+  (*let graph14 = gmap graph13 (fun x -> string_of_float(x)) in*)
+
+
   (*test fsol*)
   (*let graph8 = solution intgraph _source _sink in*)
 
   (* Rewrite the graph that has been read. *)
-  let () = write_file outfile ms_graph in
-
-  ()
-
-  (*let () = export graph8 outfile in
+  (*let () = write_file outfile graph12 in
 
   ()*)
+
+  let () = export graph13 outfile in
+
+  ()

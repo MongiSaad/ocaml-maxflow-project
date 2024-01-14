@@ -57,7 +57,8 @@ let rm_nullarc gr = gfilter gr (fun arc -> arc.lbl>0)
 
 
 let rec ffalgo graph source puit =
-  let path = find_path graph source puit [] in
+  let graph4 = rm_nullarc graph in (*au cas ou il y a déja un arc nul au début de l'algo*)
+  let path = find_path graph4 source puit [] in
   (*print_list_of_int path;*)
   match path with 
   | [] -> graph
@@ -80,3 +81,50 @@ let gsol gr1 gr2 = let gr3 = clone_nodes gr1 in
 let solution graph source puit =
   let graph2 = ffalgo graph source puit in
   gsol graph graph2
+
+
+  let rm_nullarcfloat gr = gfilter gr (fun arc -> arc.lbl>0.)
+
+  let rec augmentationfloat l =
+    let minvalue = Float.max_float in
+    match l with
+    | [] -> minvalue
+    | x::[] -> x
+    | x::rest -> let minvalue = augmentationfloat rest in
+                        if x > minvalue then minvalue
+                        else x
+
+let rec augmenterfloat v arclist graph =
+  match arclist with
+  | [] -> graph
+  | x::rest -> let graph2 = add_arc_float graph x.src x.tgt (-.v) in
+      let graph3 = add_arc_float graph2 x.tgt x.src v in
+      augmenterfloat v rest graph3
+  
+  let rec ffalgofloat graph source puit =
+    let graph4 = rm_nullarcfloat graph in (*au cas ou il y a déja un arc nul au début de l'algo*)
+    let path = find_path graph4 source puit [] in
+    (*print_list_of_int path;*)
+    match path with 
+    | [] -> graph
+    | nodelist -> let arclbllist = node_to_arclbl_list nodelist graph [] in
+      (*print_list_of_int arclbllist;*)
+      let arclist = node_to_arc_list nodelist graph [] in
+      let v = augmentationfloat arclbllist in
+      (*Printf.printf "%d\n%!" v;*)
+      let graph2 = augmenterfloat v arclist graph in
+      let graph3 = rm_nullarcfloat graph2 in
+      ffalgofloat graph3 source puit
+
+let gsolfloat gr1 gr2 = let gr3 = clone_nodes gr1 in
+e_fold gr1 (fun gr4 arc -> (new_arc gr4 {src=arc.src; tgt=arc.tgt; lbl= match find_arc gr2 arc.src arc.tgt with
+  | None -> string_of_float(arc.lbl)^"/"^string_of_float(arc.lbl)
+  | Some arc2 -> if (arc.lbl=Float.max_float) then string_of_float(arc2.lbl)^"/"^string_of_float(arc.lbl) else
+    if (arc.lbl-.arc2.lbl>=0.)
+      then string_of_float(arc.lbl-.arc2.lbl)^"/"^string_of_float(arc.lbl)
+      else string_of_float(arc.lbl-.arc2.lbl)^"/"^string_of_float(arc.lbl)})) gr3
+    
+
+let solutionfloat graph source puit =
+  let graph2 = ffalgofloat graph source puit in
+  gsolfloat graph graph2

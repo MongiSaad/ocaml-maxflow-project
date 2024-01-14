@@ -15,3 +15,9 @@ val rm_nullarc: id graph -> id graph
 val ffalgo: id graph -> id -> id -> id graph
 
 val solution: id graph -> id -> id -> string graph
+
+val augmenterfloat: float -> 'a arc list -> float graph -> float graph
+
+val solutionfloat: float graph -> id -> id -> string graph
+
+val ffalgofloat:float graph -> id -> id -> float graph

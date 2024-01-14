@@ -1,4 +1,3 @@
-
 open Graph
 
 let read_name graph line id=
@@ -75,3 +74,40 @@ let txt_to_amount infile =
 
 let diff_person ldue v =
   List.map (fun paid -> paid-.v) ldue
+
+  let node_list_from_graph graph =
+    n_fold graph (fun accu n -> n::accu) []
+
+let liste_arc_inf nodes_list =
+  let add_pairs acc x =
+    acc @ List.map (fun y -> (x, y)) (List.filter (fun z -> z<>x) nodes_list)
+  in
+  List.fold_left add_pairs [] nodes_list
+
+let create_graph_complet graph nodes_list =
+  let pairs = liste_arc_inf nodes_list in
+  let rec create_arcs graph  = function
+    | [] -> graph
+    | (x,y)::rest -> create_arcs (new_arc graph {src=x; tgt=y; lbl=string_of_float(100.)}) rest 
+  in create_arcs graph pairs
+
+let rec max_list l =
+  let minvalue = Int.min_int in
+  match l with
+  | [] -> minvalue
+  | x::[] -> x
+  | x::rest -> let minvalue = max_list rest in
+                      if x < minvalue then minvalue
+                      else x
+
+let create_source_puit graph nodelist lpaid=
+  let max_list = max_list nodelist in
+  Printf.printf "%d\n%!" max_list;
+  let gr2 = new_node graph (max_list+1) in
+  let gr3 = new_node gr2 (max_list+2) in
+  let rec link nb_node graph= function
+    | [] -> graph
+    | x::rest -> let gr4 = if x<=0. then new_arc graph {src=(max_list+1); tgt=nb_node; lbl=Float.abs(x)} 
+      else new_arc graph {src=nb_node; tgt=(max_list+2); lbl=x} in
+      link (nb_node+1) gr4 rest in
+      link 0 gr3 lpaid
