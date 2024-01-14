@@ -71,8 +71,20 @@ let () =
   let graph7 = gmap graph6 (fun x -> string_of_int(x)) in*)
 
   (*test txt_to_amount*)
-  let a = txt_to_amount infile in
+  let (a, lnom, lpaid) = txt_to_amount infile in
   Printf.printf "%f\n%!" a;
+  Printf.printf "%s\n%!" (String.concat " " lnom);
+  let stringlpaid = List.map (fun x -> string_of_float(x)) lpaid in
+  Printf.printf "%s\n%!" (String.concat " " stringlpaid);
+
+  (*test due_per_person*)
+  let v = due_per_person ms_graph a in
+  Printf.printf "%f\n%!" v;
+
+  (*test diff_person*)
+  let ldiff = diff_person lpaid v in
+  let string_ldiff = List.map (fun x -> string_of_float(x)) ldiff in
+  Printf.printf "%s\n%!" (String.concat " " string_ldiff);
 
   (*test fsol*)
   (*let graph8 = solution intgraph _source _sink in*)
