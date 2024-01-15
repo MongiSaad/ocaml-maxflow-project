@@ -122,3 +122,16 @@ let export graph outfile =
   Printf.fprintf oc "   node [shape = circle];\n";
   e_iter graph (fun x -> (Printf.fprintf oc "   %d -> %d [label = \"%s\"];\n" x.src x.tgt x.lbl));
   Printf.fprintf oc "}\n"
+
+  let export2 graph listname outfile = 
+    let oc = open_out outfile in
+      Printf.fprintf oc "digraph finite_state_machine {\n";
+      Printf.fprintf oc "   fontname=\"Helvetica,Arial,sans-serif\"\n";
+      Printf.fprintf oc "   node [fontname=\"Helvetica,Arial,sans-serif\"]\n";
+      Printf.fprintf oc "   edge [fontname=\"Helvetica,Arial,sans-serif\"]\n";
+      Printf.fprintf oc "   rankdir=LR;\n";
+      Printf.fprintf oc "   puit [shape = doublecircle, style=filled, filledcolor=lightgrey]; source puit \n";
+      Printf.fprintf oc "   source [shape = doublecircle, style=filled, filledcolor=lightgrey]; source puit \n";
+      Printf.fprintf oc "   node [shape = circle];\n";
+      e_iter graph (fun x -> (Printf.fprintf oc "   %s -> %s [label = \"%s\"];\n" (List.nth listname x.src) (List.nth listname x.tgt) x.lbl));
+      Printf.fprintf oc "}\n"

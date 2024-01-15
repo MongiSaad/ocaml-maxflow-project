@@ -1,4 +1,7 @@
 open Graph
+open Tools
+open Ford_fulkerson
+open Gfile
 
 let read_name graph line id=
   try Scanf.sscanf line "%s %f" (fun _ _ -> new_node graph id)
@@ -88,7 +91,7 @@ let create_graph_complet graph nodes_list =
   let pairs = liste_arc_inf nodes_list in
   let rec create_arcs graph  = function
     | [] -> graph
-    | (x,y)::rest -> create_arcs (new_arc graph {src=x; tgt=y; lbl=string_of_float(100.)}) rest 
+    | (x,y)::rest -> create_arcs (new_arc graph {src=x; tgt=y; lbl=string_of_float(Float.infinity)}) rest 
   in create_arcs graph pairs
 
 let rec max_list l =
@@ -111,3 +114,17 @@ let create_source_puit graph nodelist lpaid=
       else new_arc graph {src=nb_node; tgt=(max_list+2); lbl=x} in
       link (nb_node+1) gr4 rest in
       link 0 gr3 lpaid
+
+let algo_money_sharing infile outfile = 
+  let ms_graph = txt_to_node infile in
+  let (a, lnom, lpaid) = txt_to_amount infile in
+  let v = due_per_person ms_graph a in
+  let ldiff = diff_person lpaid v in
+  let listnodes = node_list_from_graph ms_graph in
+  let graph2 = create_graph_complet ms_graph listnodes in
+  let graph3 = gmap graph2 (fun x -> float_of_string(x)) in
+  let graph4 = create_source_puit graph3 listnodes ldiff in
+  let graph5 = flowcapa_graph graph4 in
+  let nb_node = max_list listnodes in
+  let fgraph = solutionfloat graph5 (nb_node+1) (nb_node+2) in
+  export2 fgraph (lnom @ ["source"; "puit"]) outfile

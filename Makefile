@@ -2,7 +2,7 @@
 
 src?=1
 dst?=8
-graph?=moneysharing1.txt
+graph?=moneysharing2.txt
 
 all: build
 
@@ -22,6 +22,8 @@ demo: build
 	./ftest.exe graphs/${graph} $(src) $(dst) outfile
 	@echo "\n   🥁  RESULT (content of outfile)  🥁\n"
 	@cat outfile
+	@dot -Tpng outfile -o outfile.png
+	@display outfile.png
 
 clean:
 	find -L . -name "*~" -delete

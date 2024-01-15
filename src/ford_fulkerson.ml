@@ -50,10 +50,10 @@ let rec augmenter v arclist graph =
 
 let rm_nullarc gr = gfilter gr (fun arc -> arc.lbl>0)
 
-(*let print_list_of_int path = match path with
+let print_list_of_int path = match path with
   | [] -> Printf.printf "[]"
   | _ -> let l1 = List.map (fun x -> string_of_int(x)) path in
-    Printf.printf "%s\n%!" (String.concat " " l1)*)
+    Printf.printf "%s\n%!" (String.concat " " l1)
 
 
 let rec ffalgo graph source puit =
@@ -83,48 +83,64 @@ let solution graph source puit =
   gsol graph graph2
 
 
-  let rm_nullarcfloat gr = gfilter gr (fun arc -> arc.lbl>0.)
+
+
+  let flowcapa_graph graph =
+    gmap graph (fun x -> (0., x))
+  
+  let test_full_lbl (flow,capa) =
+    flow<>capa
+
+  let rm_fullarcfloat gr = gfilter gr (fun arc -> test_full_lbl arc.lbl)
 
   let rec augmentationfloat l =
     let minvalue = Float.max_float in
     match l with
     | [] -> minvalue
-    | x::[] -> x
-    | x::rest -> let minvalue = augmentationfloat rest in
-                        if x > minvalue then minvalue
-                        else x
+    | (_,capa)::[] -> capa
+    | (_,capa)::rest -> let minvalue = augmentationfloat rest in
+                        if capa > minvalue then minvalue
+                        else capa
+
+let new_lbl (flow,capa) v = (flow+.v,capa)
 
 let rec augmenterfloat v arclist graph =
   match arclist with
   | [] -> graph
-  | x::rest -> let graph2 = add_arc_float graph x.src x.tgt (-.v) in
-      let graph3 = add_arc_float graph2 x.tgt x.src v in
-      augmenterfloat v rest graph3
+  | x::rest ->
+    let graph2 = new_arc graph {src=x.src; tgt=x.tgt;lbl=new_lbl x.lbl v} in
+      augmenterfloat v rest graph2
+
+let print_list_of_tuplef path = match path with
+  | [] -> Printf.printf "[]"
+  | _ -> let l1 = List.map (fun (flow,capa) -> "("^string_of_float(flow)^","^string_of_float(capa)^")") path in
+    Printf.printf "%s\n%!" (String.concat " " l1)
   
   let rec ffalgofloat graph source puit =
-    let graph4 = rm_nullarcfloat graph in (*au cas ou il y a déja un arc nul au début de l'algo*)
+    let graph4 = rm_fullarcfloat graph in (*au cas ou il y a déja un arc nul au début de l'algo*)
     let path = find_path graph4 source puit [] in
-    (*print_list_of_int path;*)
+    print_list_of_int path;
     match path with 
     | [] -> graph
     | nodelist -> let arclbllist = node_to_arclbl_list nodelist graph [] in
-      (*print_list_of_int arclbllist;*)
+    print_list_of_tuplef arclbllist;
       let arclist = node_to_arc_list nodelist graph [] in
       let v = augmentationfloat arclbllist in
-      (*Printf.printf "%d\n%!" v;*)
+      Printf.printf "%f\n%!" v;
       let graph2 = augmenterfloat v arclist graph in
-      let graph3 = rm_nullarcfloat graph2 in
+      let graph3 = rm_fullarcfloat graph2 in
       ffalgofloat graph3 source puit
+
+let getcapa (_,capa) = capa
+let getflow (flow,_) = flow
 
 let gsolfloat gr1 gr2 = let gr3 = clone_nodes gr1 in
 e_fold gr1 (fun gr4 arc -> (new_arc gr4 {src=arc.src; tgt=arc.tgt; lbl= match find_arc gr2 arc.src arc.tgt with
-  | None -> string_of_float(arc.lbl)^"/"^string_of_float(arc.lbl)
-  | Some arc2 -> if (arc.lbl=Float.max_float) then string_of_float(arc2.lbl)^"/"^string_of_float(arc.lbl) else
-    if (arc.lbl-.arc2.lbl>=0.)
-      then string_of_float(arc.lbl-.arc2.lbl)^"/"^string_of_float(arc.lbl)
-      else string_of_float(arc.lbl-.arc2.lbl)^"/"^string_of_float(arc.lbl)})) gr3
-    
+  | None -> string_of_float(getcapa(arc.lbl))^"/"^string_of_float(getcapa(arc.lbl))
+  | Some arc2 ->if (getflow(arc.lbl)-.getflow(arc2.lbl)>=0.)
+      then string_of_float(getflow(arc.lbl)-.getflow(arc2.lbl))^"/"^string_of_float(getcapa(arc.lbl))
+      else string_of_float(getflow(arc2.lbl))^"/"^string_of_float(getcapa(arc.lbl))})) gr3
 
 let solutionfloat graph source puit =
-  let graph2 = ffalgofloat graph source puit in
-  gsolfloat graph graph2
+  let graph3 = ffalgofloat graph source puit in
+  gsolfloat graph graph3

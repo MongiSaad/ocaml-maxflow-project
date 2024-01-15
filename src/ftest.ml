@@ -1,6 +1,6 @@
-open Gfile
-open Tools
-open Ford_fulkerson
+(*open Gfile*)
+(*open Tools
+open Ford_fulkerson*)
 open Money_sharing
 
 let () =
@@ -31,7 +31,7 @@ let () =
   (* Open file *)
   (*let graph = from_file infile in
   let intgraph = gmap graph (fun x -> int_of_string(x)) in*)
-  let ms_graph = txt_to_node infile in
+  (*let ms_graph = txt_to_node infile in*)
 
   (*fonctions à tester*)
   (* let graph2 = gmap graph (fun x -> string_of_int(int_of_string(x)+1)) in*)
@@ -71,7 +71,7 @@ let () =
   let graph7 = gmap graph6 (fun x -> string_of_int(x)) in*)
 
   (*test txt_to_amount*)
-  let (a, lnom, lpaid) = txt_to_amount infile in
+  (*let (a, lnom, lpaid) = txt_to_amount infile in
   Printf.printf "%f\n%!" a;
   Printf.printf "%s\n%!" (String.concat " " lnom);
   let stringlpaid = List.map (fun x -> string_of_float(x)) lpaid in
@@ -96,18 +96,22 @@ let () =
   (*let graph14 = gmap graph10 (fun x -> int_of_float(x)) in*)
   
   (*test ffalgo sur le nouveau pb*)
-  let graph13 = solutionfloat graph10 3 4 in
+  let graph13 = flowcapa_graph graph10 in
+  let graph14 = solutionfloat graph13 3 4 in
   (*let graph14 = gmap graph13 (fun x -> string_of_float(x)) in*)
 
 
   (*test fsol*)
-  (*let graph8 = solution intgraph _source _sink in*)
+  (*let graph8 = solution intgraph _source _sink in*)*)
+
+  (*let fgraph = algo_money_sharing infile in*)
+  algo_money_sharing infile outfile;
 
   (* Rewrite the graph that has been read. *)
   (*let () = write_file outfile graph12 in
 
   ()*)
 
-  let () = export graph13 outfile in
+  (*let () = export fgraph outfile in
 
-  ()
+  ()*)

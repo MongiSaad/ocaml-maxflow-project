@@ -13,3 +13,5 @@ val create_graph_complet: string graph -> id list -> string graph
 val node_list_from_graph: 'a graph -> id list
 
 val create_source_puit: float graph -> id list -> float list -> float graph
+
+val algo_money_sharing: string -> string -> unit

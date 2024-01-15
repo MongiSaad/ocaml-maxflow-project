@@ -16,8 +16,8 @@ val ffalgo: id graph -> id -> id -> id graph
 
 val solution: id graph -> id -> id -> string graph
 
-val augmenterfloat: float -> 'a arc list -> float graph -> float graph
+val solutionfloat: (float * float) graph -> id -> id -> string graph
 
-val solutionfloat: float graph -> id -> id -> string graph
+val ffalgofloat:(float * float) graph -> id -> id -> (float * float) graph
 
-val ffalgofloat:float graph -> id -> id -> float graph
+val flowcapa_graph: 'a graph -> (float * 'a) graph
